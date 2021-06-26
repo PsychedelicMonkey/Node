@@ -23,9 +23,10 @@
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
+          <% if (typeof user != 'undefined') { %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
+              <%= user.name %>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="#">My Profile</a>
@@ -33,9 +34,11 @@
               <a class="dropdown-item" href="/auth/logout">Logout</a>
             </div>
           </li>
+          <% } else { %>
           <li class="nav-item">
             <a class="nav-link" href="/auth/login">Login</a>
           </li>
+          <% } %>
         </ul>
       </div>
     </div>
