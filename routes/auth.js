@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
+
+const User = require('../models/User');
 
 router.get('/login', (req, res) => {
   res.render('login');
@@ -24,7 +27,27 @@ router.post('/register', (req, res) => {
   if (errors.length > 0) {
     res.render('register', { errors, name, email });
   } else {
-    res.send('PASS');
+    User.findOne({ email })
+      .then(user => {
+        if (user) {
+          req.flash('error_msg', 'That email address is already registered');
+          res.redirect('/auth/register');
+        }
+
+        const newUser = new User({ name, email, password });
+        
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(password, salt, (err, hash) => {
+            if (err) throw err;
+
+            newUser.password = hash;
+            newUser.save().then(user => {
+              req.flash('success_msg', 'Your account is created and you can now login');
+              res.redirect('/auth/login');
+            });
+          });
+        });
+      });
   }
 });
 
