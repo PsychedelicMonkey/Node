@@ -9,4 +9,23 @@ router.get('/register', (req, res) => {
   res.render('register');
 });
 
+router.post('/register', (req, res) => {
+  const { name, email, password, password2 } = req.body;
+  let errors = [];
+
+  if (!name || !email || !password || !password2) {
+    errors.push({ msg: 'Please fill in all fields' });
+  }
+
+  if (password !== password2) {
+    errors.push({ msg: 'Passwords must match' });
+  }
+
+  if (errors.length > 0) {
+    res.render('register', { errors, name, email });
+  } else {
+    res.send('PASS');
+  }
+});
+
 module.exports = router;
